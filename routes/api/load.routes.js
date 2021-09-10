@@ -40,18 +40,20 @@ router.param('id', async (req, res, next) => {
 });
 
 router.get('/', validateGetLoads, async (req, res, next) => {
-  const queryStatus = req.query.status;
-  const status = queryStatus.toUpperCase();
+  const queryStatus = req.query?.status;
+  const status = queryStatus && queryStatus.toUpperCase();
 
   const limit = parseInt(req.query.limit) || 10;
   const offset = parseInt(req.query.offset) || 0;
 
   try {
     const loadEntityList = await loadService.getLoadsForRole(req.user, status);
-    const loadResponseDtoList =
+    const loads =
       loadService.convertEntityListToResponseDtoList(loadEntityList);
 
-    res.json({ loads: loadResponseDtoList });
+    resLoads = loads.slice(0, limit).slice(offset);
+
+    res.json({ loads: resLoads });
   } catch (err) {
     next(err);
   }

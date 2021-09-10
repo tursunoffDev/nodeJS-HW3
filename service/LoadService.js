@@ -142,8 +142,6 @@ class LoadService {
     const updatedLoad = await Load.findByIdAndUpdate(load._id, {
       state: newState,
     });
- 
-
 
     await updatedLoad.addLog(`Change load state to: ${newState}`);
 
@@ -197,7 +195,7 @@ class LoadService {
     return statesTuple[currentStateIdx + 1];
   }
 
-  async getLoadsForRole(user) {
+  async getLoadsForRole(user, status) {
     switch (user.role) {
       case DRIVER:
         return [await driverService.getAssignedDriverLoad(user)];
